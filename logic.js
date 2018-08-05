@@ -2,7 +2,7 @@ var topics = ["Belize", 'Thailand', "Morocco", "Egypt", "Mecca", "Ecuador", "Tri
 
 //render buttons
 function renderButton() {
-
+$("#button-view").empty();
 
     for (var i = 0; i < topics.length; i++) {
         var b = $("<button>");
@@ -10,7 +10,7 @@ function renderButton() {
         b.attr("data-name", topics[i]);
         b.text(topics[i]);
         $("#button-view").append(b);
-        console.log(b);
+       
 
     }
 }
@@ -19,7 +19,7 @@ function renderButton() {
 $(document).ready(function(){
     renderButton();
 
-    //click handler
+    //click handler to for ajax call
 $("button").on("click", function() {
     var topic = $(this).attr("data-name");
     var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=DJuQztvznVVwGIhQctVEMBqoawgXTI70&limit=10";
@@ -36,7 +36,8 @@ $("button").on("click", function() {
             var topicsDiv = $("<div>");
             var p = $("<p>").text("Rating: "+ results[i].rating);
             var topicsImg = $("<img>");
-            topicsImg.attr("src", results[i].images.fixed_height_still.url);
+            topicsImg.attr({"src": results[i].images.fixed_height_still.url, "data-state":"still", "data-still":results[i].images.fixed_height_still.url, "data-animate":results[i].images.fixed_height.url});
+            topicsImg.addClass("gif");
             topicsDiv.append(topicsImg, p);
             $("#giphy-view").prepend(topicsDiv);
             console.log(topicsImg);
@@ -47,4 +48,23 @@ $("button").on("click", function() {
         console.log(error);
     });
 }); 
+
+//add new search button
+$(".searchBtn").on("click", function(event){
+    event.preventDefault();
+    var gif = $("#search-input").val().trim();
+    topics.push(gif);
+    renderButton();
+})
+
+//changing state of gif
+$(".gif").on("click", function(){
+    var state = $(this).attr("data-state");
+    if(state == "still"){
+        $(this).attr({'src':$(this).attr('data-animate'), 'data-state':"animate"});
+    }else{
+        $(this).attr({'src':$(this).attr('data-still'), 'data-state':"still"});
+    }
+});
+
 });

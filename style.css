@@ -1,5 +1,9 @@
+#button-view{
+    margin-left:4%;
+}
 .gif{
     margin: 5px;
+    padding: 3px;
 }
 #giphy-view{
     margin-left: 10%;
